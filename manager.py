@@ -112,6 +112,9 @@ class Manager:
             area += (summerized[i][0] - summerized[i - 1][0]) * summerized[i - 1][1]
         return area / self.time
 
+    def rooms_mean_queue_size(self):
+        return np.mean([self.mean_queue_size(room.queue) for room in self.rooms])
+
     def get_patients_log(self):
         logs = []
         for patient in self.patients:
