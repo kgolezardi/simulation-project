@@ -1,19 +1,10 @@
-import enum
-
 import numpy as np
 
+from enums import Event, Log
 from patient import Patient
 from pqueue import PriorityQueue
 from room import Room
 from waiting_queue import WaitingQueue
-
-
-class Event(enum.Enum):
-    ENTER = 0
-    RECEPTION_READY = 1
-    DOCTOR_READY = 2
-    BORED_IN_RECEPTION = 3
-    BORED_IN_ROOM = 4
 
 
 class Manager:
@@ -115,8 +106,34 @@ class Manager:
         # print('Bye bye %s' % patient)
 
     def mean_queue_size(self, queue):
-        summerized = queue.summerize_log()
+        summerized = self.summerize_log(queue.log)
         area = 0
         for i in range(1, len(summerized)):
             area += (summerized[i][0] - summerized[i - 1][0]) * summerized[i - 1][1]
         return area / self.time
+
+    def get_patients_log(self):
+        logs = []
+        for patient in self.patients:
+            logs.append((Log.ENTER, patient.healthy, patient.enter_time))
+            logs.append((Log.EXIT, patient.healthy, patient.exit_time))
+        logs.sort(key=lambda x: x[2])
+        return logs
+
+    @staticmethod
+    def summerize_log(log, health=None):
+        points = []
+        count = 0
+        last_time = 0
+        for event, healthy, time in log:
+            if time != last_time:
+                points.append((last_time, count))
+            last_time = time
+            if health is not None and healthy != health:
+                continue
+            if event == Log.ENTER:
+                count += 1
+            else:
+                count -= 1
+        points.append((last_time, count))
+        return points
