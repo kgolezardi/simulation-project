@@ -1,7 +1,6 @@
 import enum
 
 import numpy as np
-import pandas as pd
 
 from patient import Patient
 from pqueue import PriorityQueue
@@ -114,30 +113,6 @@ class Manager:
     def finalize_patient(self, patient):
         patient.exit_time = self.time
         # print('Bye bye %s' % patient)
-
-    def report(self):
-        data = pd.DataFrame(columns=['Healthy', 'Corona', 'All'])
-        spent_times = {True: [], False: []}
-        waiting_times = {True: [], False: []}
-        bored_count = 0
-        for patient in self.patients:
-            spent_times[patient.corona].append(patient.spent_time)
-            waiting_times[patient.corona].append(patient.waiting_time)
-            if patient.bored:
-                bored_count += 1
-        data.loc['1. Spent time'] = [np.mean(spent_times[False]), np.mean(spent_times[True]),
-                                     np.mean(spent_times[False] + spent_times[True])]
-        data.loc['2. Waiting time'] = [np.mean(waiting_times[False]), np.mean(waiting_times[True]),
-                                       np.mean(waiting_times[False] + waiting_times[True])]
-        print(data)
-
-        print('3. Bored count:', bored_count / self.time)
-
-        data_columns = ['Reception'] + ['Room %d' % i for i in range(len(self.rooms))]
-        data = pd.DataFrame(columns=data_columns)
-        data.loc['4. Mean queue size'] = [self.mean_queue_size(self.reception_queue)] + \
-                                         [self.mean_queue_size(room.queue) for room in self.rooms]
-        print(data)
 
     def mean_queue_size(self, queue):
         summerized = queue.summerize_log()
