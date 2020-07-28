@@ -59,7 +59,6 @@ print((np.sqrt(all_waiting_times.var()) * 1.96 / (0.005 * np.mean(all_waiting_ti
 
 def mean_mean_queue_size(speed):
     speedy_rooms_service_rates = [np.array(rates)*speed for rates in rooms_service_rates]
-    # print(speedy_rooms_service_rates)
     speedy_manager = Manager(patient_numbers=patient_numbers,
                              rooms_service_rates=speedy_rooms_service_rates,
                              enter_rate=lam,
@@ -116,8 +115,9 @@ plt.show()
 
 labels = ['All', 'Corona', 'Healthy']
 healths = [None, False, True]
+patients_log = manager.get_patients_log()
 for label, health in zip(labels, healths):
-    summarized_patients_log = manager.summerize_log(manager.get_patients_log(), health=health)
+    summarized_patients_log = manager.summerize_log(patients_log, health=health)
     x = [time for time, count in summarized_patients_log]
     y = [count for time, count in summarized_patients_log]
     plt.plot(x, y, label=label)
