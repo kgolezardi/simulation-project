@@ -71,7 +71,7 @@ class Manager:
 
             elif event[0] == Event.BORED_IN_RECEPTION:
                 patient = event[1]
-                if patient.in_reception_queue():
+                if not patient.checked_in():
                     self.reception_queue.remove(self.time, patient)
                     self.finalize_patient(patient)
 
