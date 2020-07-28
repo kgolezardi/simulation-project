@@ -131,8 +131,7 @@ class Manager:
                                        np.mean(waiting_times[False] + waiting_times[True])]
         print(data)
 
-        # FIXME: what the hell is bored count?!
-        print('3. Bored count:', bored_count)
+        print('3. Bored count:', bored_count / self.time)
 
         data_columns = ['Reception'] + ['Room %d' % i for i in range(len(self.rooms))]
         data = pd.DataFrame(columns=data_columns)
